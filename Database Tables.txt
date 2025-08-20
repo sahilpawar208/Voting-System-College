@@ -1,0 +1,99 @@
+CREATE TABLE [dbo].[tb1_studentlogin] (
+    [SRNo]            INT            IDENTITY (1, 1) NOT NULL,
+    [StudentRollNo]   NVARCHAR (100) NOT NULL,
+    [StudentName]     NVARCHAR (100) NOT NULL,
+    [StudentMobileNo] NVARCHAR (15)  NULL,
+    PRIMARY KEY CLUSTERED ([StudentRollNo] ASC)
+);
+
+CREATE TABLE [dbo].[tb2_event] (
+    [EventID]   INT            NOT NULL,
+    [EventName] NVARCHAR (100) NOT NULL,
+    [ImagePath] NVARCHAR (255) NULL,
+    PRIMARY KEY CLUSTERED ([EventID] ASC)
+);
+
+CREATE TABLE [dbo].[tb3_candidate] (
+    [CandidateID]   INT            IDENTITY (1, 1) NOT NULL,
+    [CandidateName] NVARCHAR (100) NOT NULL,
+    [EventID]       INT            NOT NULL,
+    [VoteCount]     INT            DEFAULT ((0)) NOT NULL,
+    PRIMARY KEY CLUSTERED ([CandidateID] ASC),
+    FOREIGN KEY ([EventID]) REFERENCES [dbo].[tb2_event] ([EventID])
+);
+
+CREATE TABLE [dbo].[tb4_event_vote] (
+    [EventID]       INT            NOT NULL,
+    [EventName]     NVARCHAR (100) NOT NULL,
+    [CandidateID]   INT            NOT NULL,
+    [CandidateName] NVARCHAR (100) NOT NULL,
+    [StudentRollNo] NVARCHAR (100) NOT NULL,
+    [StudentName]   NVARCHAR (100) NOT NULL,
+    PRIMARY KEY CLUSTERED ([EventID] ASC, [CandidateID] ASC, [StudentRollNo] ASC),
+    FOREIGN KEY ([EventID]) REFERENCES [dbo].[tb2_event] ([EventID]) ON DELETE CASCADE,
+    FOREIGN KEY ([CandidateID]) REFERENCES [dbo].[tb3_candidate] ([CandidateID]) ON DELETE CASCADE,
+    FOREIGN KEY ([StudentRollNo]) REFERENCES [dbo].[tb1_studentlogin] ([StudentRollNo]) ON DELETE CASCADE
+);
+
+CREATE TABLE [dbo].[tb5_CRlogin] (
+    [SRNo]       INT            IDENTITY (1, 1) NOT NULL,
+    [CRRollno]   NVARCHAR (100) NOT NULL,
+    [CRName]     NVARCHAR (100) NOT NULL,
+    [CRClass]    NVARCHAR (50)  NOT NULL,
+    [CRMobileNo] NVARCHAR (15)  NULL,
+    PRIMARY KEY CLUSTERED ([CRRollno] ASC)
+);
+
+CREATE TABLE [dbo].[tb6_GScandidate] (
+    [GSID]      INT            IDENTITY (1, 1) NOT NULL,
+    [GSrollno]  NVARCHAR (50)  NOT NULL,
+    [GSName]    NVARCHAR (100) NOT NULL,
+    [GSClass]   NVARCHAR (50)  NOT NULL,
+    [VoteCount] INT            DEFAULT ((0)) NOT NULL,
+    PRIMARY KEY CLUSTERED ([GSID] ASC)
+);
+
+CREATE TABLE [dbo].[tb7_GSvote] (
+    [GSID]      INT            NOT NULL,
+    [GSrollno]  NVARCHAR (50)  NOT NULL,
+    [GSName]    NVARCHAR (100) NOT NULL,
+    [GSClass]   NVARCHAR (50)  NOT NULL,
+    [CRRollno]  NVARCHAR (100) NOT NULL,
+    [CRName]    NVARCHAR (100) NOT NULL,
+    [VoteCount] INT            DEFAULT ((0)) NOT NULL,
+    PRIMARY KEY CLUSTERED ([GSID] ASC, [CRRollno] ASC),
+    FOREIGN KEY ([GSID]) REFERENCES [dbo].[tb6_GScandidate] ([GSID]) ON DELETE CASCADE,
+    FOREIGN KEY ([CRRollno]) REFERENCES [dbo].[tb5_CRlogin] ([CRRollno]) ON DELETE CASCADE
+);
+
+CREATE TABLE [dbo].[tb8_ClassStudentlogin] (
+    [SRNo]            INT            IDENTITY (1, 1) NOT NULL,
+    [StudentRollno]   NVARCHAR (100) NOT NULL,
+    [StudentName]     NVARCHAR (100) NOT NULL,
+    [StudentClass]    NVARCHAR (50)  NOT NULL,
+    [studentMobileNo] NVARCHAR (15)  NULL,
+    PRIMARY KEY CLUSTERED ([StudentRollno] ASC)
+);
+
+CREATE TABLE [dbo].[tb09_CRcandidate] (
+    [CRID]      INT            IDENTITY (1, 1) NOT NULL,
+    [CRRollno]  NVARCHAR (50)  NOT NULL,
+    [CRName]    NVARCHAR (100) NOT NULL,
+    [CRClass]   NVARCHAR (50)  NOT NULL,
+    [VoteCount] INT            DEFAULT ((0)) NOT NULL,
+    PRIMARY KEY CLUSTERED ([CRID] ASC)
+);
+
+CREATE TABLE [dbo].[tb10_CRvote] (
+    [CRID]          INT            NOT NULL,
+    [CRRollno]      NVARCHAR (50)  NOT NULL,
+    [CRName]        NVARCHAR (100) NOT NULL,
+    [CRClass]       NVARCHAR (50)  NOT NULL,
+    [StudentRollno] NVARCHAR (100) NOT NULL,
+    [StudentName]   NVARCHAR (100) NOT NULL,
+    [VoteCount]     INT            DEFAULT ((0)) NOT NULL,
+    PRIMARY KEY CLUSTERED ([CRID] ASC, [StudentRollno] ASC),
+    FOREIGN KEY ([CRID]) REFERENCES [dbo].[tb09_CRcandidate] ([CRID]) ON DELETE CASCADE,
+    FOREIGN KEY ([StudentRollno]) REFERENCES [dbo].[tb8_ClassStudentlogin] ([StudentRollno]) ON DELETE CASCADE
+);
+
